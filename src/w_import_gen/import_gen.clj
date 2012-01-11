@@ -1,6 +1,7 @@
 (ns ^{:doc "genereate import files"}
   clojure-station.wikeo.import-gen
   (:use     [midje.sweet])
+  (:use     [clojure.tools.cli])
   (:use     [clojure.pprint :only [pp pprint]])
   (:require [clojure.walk :as w])
   (:require [clojure.set  :as set])
@@ -12,7 +13,6 @@
 
 (println "--------- BEGIN OF IMPORT_GEN  ----------" (java.util.Date.))
 
-(fact (as-lines [1 2]) => "1\n2\n")
 
 (defn lazy-write-lines "Take a seq and a filename and lazily write the seq to the file, each element being on a separate line"
   [f s] (with-open [w (io/writer f)]
@@ -112,6 +112,24 @@
     (attr-file    attributes)
     (model-file   models attributes)
     (content-file models attributes (:content-nb args))))
+
+(defn -main [& args]
+  (let [[options args banner :as opts]
+        (cli args
+             ["-a" "--attributes" "Number of attributes per model to generate" :parse-fn #(Integer. %) :default 80] 
+             ["-m" "--models"     "Number of models to generate"               :parse-fn #(Integer. %) :default 10]
+             ["-c" "--contents"   "Number of contents to generate"             :parse-fn #(Integer. %) :default 100])]
+    ;; deal with 
+    (when (options :help)
+      (println banner)
+      (System/exit 0))
+    (println "Generating" (options :attributes) "attributes", (options :models) "models and" (options :contents) "contents...")
+    ;; generates the import files
+    ;; TODO could be improved to directly match the arg map instead of transcoding
+    (all-file {:model-nb           (options :models)
+               :attrs-per-model-nb (options :attributes)
+               :content-nb         (options :contents)}   )
+    (println "done!")))    
 
 (comment "A small data set"
   (all-file {:model-nb           2
