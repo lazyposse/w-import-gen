@@ -36,7 +36,7 @@
       (attr-line "titre") => "CREATE;Attribute;titre;SID;name-titre;display-name-titre;;string")
 
 (defn attr-file
-  [attr-codes] (spit-as-lines "/tmp/attr.csv"
+  [attr-codes] (spit-as-lines "/tmp/gen-attr.csv"
                       (cons (attr-head)
                             (map attr-line attr-codes))))
 
@@ -59,7 +59,7 @@
 
 (defn model-file
   [model->attrs] (spit-as-lines
-                  "/tmp/model.csv"
+                  "/tmp/gen-model.csv"
                   (cons (model-head)
                         (map (fn [model-code]
                                (let [attrs (model->attrs model-code)]
@@ -87,7 +87,7 @@
 
 (defn content-file
   [model->attrs content-nb]
-  (spit-as-lines "/tmp/content.csv"
+  (spit-as-lines "/tmp/gen-content.csv"
                  (cons (content-head)
                        (take content-nb
                              (cycle
