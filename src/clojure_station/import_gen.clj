@@ -59,9 +59,12 @@
 
 (defn model-file
   [] (spit-as-lines "/tmp/model.csv"
-                      (cons (model-head)
-                            (map #(model-line % 1 [%]) (range 10)))))
+                    (cons (model-head)
+                          (map #(model-line % 1 [%]) (range 10)))))
 
+(defn- content-head
+  [] (str "\"ACTION\";\"TYPE D'OBJET\";\"ID CONTENU\";\"SOURCE\";\"CODE DU MODELE\";"
+          (reduce str (repeat 53 "\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\";"))))
 
 
 (println "--------- END OF 4CLOJURE  ----------" (java.util.Date.))
