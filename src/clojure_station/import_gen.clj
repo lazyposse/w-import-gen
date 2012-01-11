@@ -74,8 +74,8 @@
 
 (defn- content-line
   [model-code attr-nb attr-codes]
-  (str "\"CREATE\";\"Content\";;\"SITELABO\";\"" model-code "\";"
-       (reduce str (mapcat #(str "\"" % "\";\"" % "-val\";" )
+  (str "\"CREATE\";\"Content\";;\"SITELABO\";\"" model-code
+       (reduce str (mapcat #(str "\";\"" % "\";\"" % "-val" )
                            (take attr-nb attr-codes)))))
 
 (fact "content-line"
