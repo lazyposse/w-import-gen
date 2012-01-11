@@ -8,7 +8,6 @@
   (:require [clojure.zip  :as z])
   (:require [clojure.java.shell :as shell])
   (:require [clojure.string :as s :only [join]])
-  (:import (java.util Date))
   (:gen-class))
 
 (println "--------- BEGIN OF IMPORT_GEN  ----------" (java.util.Date.))
