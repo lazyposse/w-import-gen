@@ -6,13 +6,12 @@
   (:require [clojure.set  :as set])
   (:require [clojure.zip  :as z])
   (:require [clojure.java.shell :as shell])
+  (:require [clojure.string :as s :only [join]])
   (:import (java.util Date)))
 
 (println "--------- BEGIN OF IMPORT_GEN  ----------" (java.util.Date.))
 
-(defn as-lines [s] (reduce #(str %1 %2 "\n")
-                           ""
-                           s))
+(defn as-lines [s] (str (s/join "\n" s) "\n"))
 
 (fact (as-lines [1 2]) => "1\n2\n")
 
