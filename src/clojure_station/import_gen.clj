@@ -37,17 +37,21 @@
       (attr-line "titre") => "\"CREATE\";\"Attribute\";\"titre\";\"SID\";\"name-titre\";\"display-name-titre\";;\"string\"")
 
 (defn attr-file
-  [] (spit-as-lines "/tmp/attr.csv"
+  [attr-codes] (spit-as-lines "/tmp/attr.csv"
                       (cons (attr-head)
-                            (map attr-line (range 10)))))
+                            (map attr-line attr-codes))))
+
+(attr-file ["a" "b"])
+
 
 (defn- model-head
   [] "\"ACTION\";\"TYPE D'OBJET\";\"CODE DU MODELE\";\"SOURCE\";\"TYPE DE MODELE\";\"NOM\";\"NOM D'AFFICHAGE\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";")
 
 (defn- model-line
-  [code nb attribut-code] (str "\"CREATE\";\"Model\";\"" code "\";\"SID\";\"Product\";\"name-" code "\";\"display-name-" code "\";"
-                               (reduce str (mapcat (fn [i] (str "\"" i "|true|false|\";"))
-                                                   (take nb attribut-code)))))
+  [model-code nb attribut-codes]
+  (str "\"CREATE\";\"Model\";\"" model-code "\";\"SID\";\"Product\";\"name-" model-code "\";\"display-name-" model-code "\";"
+       (reduce str (mapcat (fn [attr-code] (str "\"" attr-code "|true|false|\";"))
+                           (take nb attribut-codes)))))
 
 (fact "model-line"
       (model-line "ProduitRosier" 0 ["reference" "designation" "foo"]) =>
@@ -58,9 +62,18 @@
       "\"CREATE\";\"Model\";\"ProduitRosier\";\"SID\";\"Product\";\"name-ProduitRosier\";\"display-name-ProduitRosier\";\"reference|true|false|\";\"designation|true|false|\";")
 
 (defn model-file
-  [] (spit-as-lines "/tmp/model.csv"
-                    (cons (model-head)
-                          (map #(model-line % 1 [%]) (range 10)))))
+  [model->attrs] (spit-as-lines
+                  "/tmp/model.csv"
+                  (cons (model-head)
+                        (map (fn [model-code]
+                               (let [attrs (model->attrs model-code)]
+                                 (model-line model-code
+                                             (count attrs)
+                                             attrs )))
+                             (keys model->attrs)))))
+
+(model-file {"m1" ["a1" "a2"]
+             "m2" ["a2" "a3"]})
 
 (defn- content-head
   [] (str "\"ACTION\";\"TYPE D'OBJET\";\"ID CONTENU\";\"SOURCE\";\"CODE DU MODELE\";"
@@ -79,15 +92,23 @@
       =>
       "\"CREATE\";\"Content\";;\"SITELABO\";\"ServiceRosier\";\"attr1\";\"attr1-val\";\"attr2\";\"attr2-val\";")
 
-(spit-as-lines "/tmp/model.csv"
-                    (cons (model-head)
-                          (map #(model-line % 1 [%]) (range 10))))
-
 (defn content-file
-  []
+  [model->attrs content-nb]
   (spit-as-lines "/tmp/content.csv"
                  (cons (content-head)
-                       (map #(content-line % 1 [(+ 10 %)]) (range 10)))))
+                       (take content-nb
+                             (cycle
+                              (map (fn [model-code]
+                                     (let [attrs (model->attrs model-code)]
+                                       (content-line model-code (count attrs) attrs)))
+                                   (keys model->attrs)))))))
 
+(content-file
+ {"m1" ["a1" "a2"]
+  "m2" ["a2" "a3"]} 3)
+
+
+(defn all-file
+  [] (do (attr-file )))
 
 (println "--------- END OF 4CLOJURE  ----------" (java.util.Date.))
