@@ -2,6 +2,7 @@
   clojure-station.wikeo.import-gen
   (:use     [midje.sweet])
   (:use     [clojure.pprint :only [pp pprint]])
+  (:use     [clojure.tools.cli])
   (:require [clojure.walk :as w])
   (:require [clojure.set  :as set])
   (:require [clojure.zip  :as z])
@@ -115,8 +116,19 @@
     (model-file model->attrs)
     (content-file model->attrs content-nb)))
 
-
 (defn -main [& args]
-  (all-file 1000 8000 130000))
+  (let [[options args banner :as opts]
+        (cli args
+             ["-a" "--attributes" "Number of attributes to generate" :parse-fn #(Integer. %) :default 80] 
+             ["-m" "--models" "Number of models to generate" :parse-fn #(Integer. %) :default 10]
+             ["-c" "--contents" "Number of contents to generate" :parse-fn #(Integer. %) :default 100])]
+
+    ;; deal with 
+    (when (options :help)
+      (println banner)
+      (System/exit 0))
+    
+    ;; generates the import files
+    (all-file (options :attributes) (options :models) (options :contents))))
 
 (println "--------- END OF IMPORT_GEN  ----------" (java.util.Date.))
