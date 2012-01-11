@@ -12,14 +12,7 @@
 
 (println "--------- BEGIN OF IMPORT_GEN  ----------" (java.util.Date.))
 
-(defn as-lines [s] (reduce #(str %1 %2 "\n")
-                           ""
-                           s))
-
 (fact (as-lines [1 2]) => "1\n2\n")
-
-(defn spit-as-lines "Given a seq and a filename, write it to the specified file as lines."
-  [f s] (spit f (as-lines s)))
 
 (defn lazy-write-lines "Take a seq and a filename and lazily write the seq to the file, each element being on a separate line"
   [fn s] (with-open [w (io/writer fn)]
@@ -28,13 +21,8 @@
                (println l)))))
 
 (fact "lazy-write-lines"
-      (let [filename "/tmp/spit-as-lines.txt"]
+      (let [filename "/tmp/lazy-write-lines.txt"]
         (lazy-write-lines filename [1 2])   => nil
-        (:out (shell/sh "cat" filename)) => "1\n2\n"))
-
-(fact "spit-as-lines"
-      (let [filename "/tmp/spit-as-lines.txt"]
-        (spit-as-lines filename [1 2])   => nil
         (:out (shell/sh "cat" filename)) => "1\n2\n"))
 
 (defn- attr-head
@@ -49,7 +37,7 @@
       (attr-line "titre") => "\"CREATE\";\"Attribute\";\"titre\";\"SID\";\"name-titre\";\"display-name-titre\";;\"string\"")
 
 (defn attr-file
-  [attr-codes] (spit-as-lines "/tmp/attr.csv"
+  [attr-codes] (lazy-write-lines "/tmp/attr.csv"
                       (cons (attr-head)
                             (map attr-line attr-codes))))
 
@@ -71,7 +59,7 @@
       "\"CREATE\";\"Model\";\"ProduitRosier\";\"SID\";\"Product\";\"name-ProduitRosier\";\"display-name-ProduitRosier\";\"reference|true|false|\";\"designation|true|false|\";")
 
 (defn model-file
-  [model->attrs] (spit-as-lines
+  [model->attrs] (lazy-write-lines
                   "/tmp/model.csv"
                   (cons (model-head)
                         (map (fn [model-code]
@@ -100,14 +88,14 @@
 
 (defn content-file
   [model->attrs content-nb]
-  (spit-as-lines "/tmp/content.csv"
-                 (cons (content-head)
-                       (take content-nb
-                             (cycle
-                              (map (fn [model-code]
-                                     (let [attrs (model->attrs model-code)]
-                                       (content-line model-code (count attrs) attrs)))
-                                   (keys model->attrs)))))))
+  (lazy-write-lines "/tmp/content.csv"
+                    (cons (content-head)
+                          (take content-nb
+                                (cycle
+                                 (map (fn [model-code]
+                                        (let [attrs (model->attrs model-code)]
+                                          (content-line model-code (count attrs) attrs)))
+                                      (keys model->attrs)))))))
 
 (defn new-model->attrs
   [attr-nb model-nb]
