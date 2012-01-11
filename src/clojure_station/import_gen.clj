@@ -2,14 +2,13 @@
   clojure-station.wikeo.import-gen
   (:use     [midje.sweet])
   (:use     [clojure.pprint :only [pp pprint]])
-  (:require     [clojure.walk :as w])
-  (:require [clojure.set                       :as set])
-  (:require [clojure.zip                       :as z])
+  (:require [clojure.walk :as w])
+  (:require [clojure.set  :as set])
+  (:require [clojure.zip  :as z])
   (:require [clojure.java.shell :as shell])
   (:import (java.util Date)))
 
-
-(println "--------- BEGIN OF 4CLOJURE  ----------" (java.util.Date.))
+(println "--------- BEGIN OF IMPORT_GEN  ----------" (java.util.Date.))
 
 (defn as-lines [s] (reduce #(str %1 %2 "\n")
                            ""
@@ -41,9 +40,6 @@
                       (cons (attr-head)
                             (map attr-line attr-codes))))
 
-(attr-file ["a" "b"])
-
-
 (defn- model-head
   [] "\"ACTION\";\"TYPE D'OBJET\";\"CODE DU MODELE\";\"SOURCE\";\"TYPE DE MODELE\";\"NOM\";\"NOM D'AFFICHAGE\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";")
 
@@ -71,9 +67,6 @@
                                              (count attrs)
                                              attrs )))
                              (keys model->attrs)))))
-
-(model-file {"m1" ["a1" "a2"]
-             "m2" ["a2" "a3"]})
 
 (defn- content-head
   [] (str "\"ACTION\";\"TYPE D'OBJET\";\"ID CONTENU\";\"SOURCE\";\"CODE DU MODELE\";"
@@ -103,12 +96,12 @@
                                        (content-line model-code (count attrs) attrs)))
                                    (keys model->attrs)))))))
 
-(content-file
- {"m1" ["a1" "a2"]
-  "m2" ["a2" "a3"]} 3)
-
-
 (defn all-file
-  [] (do (attr-file )))
+ [] (let [model->attrs {"m1" ["a1" "a2"]
+                        "m2" ["a2" "a3"]}
+          attrs (distinct (mapcat second model->attrs))]
+      (attr-file attrs)
+      (model-file model->attrs)
+      (content-file model->attrs 4)))
 
-(println "--------- END OF 4CLOJURE  ----------" (java.util.Date.))
+(println "--------- END OF IMPORT_GEN  ----------" (java.util.Date.))
