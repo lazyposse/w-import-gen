@@ -119,15 +119,18 @@
   (let [[options args banner :as opts]
         (cli args
              ["-a" "--attributes" "Number of attributes to generate" :parse-fn #(Integer. %) :default 80] 
-             ["-m" "--models" "Number of models to generate" :parse-fn #(Integer. %) :default 10]
-             ["-c" "--contents" "Number of contents to generate" :parse-fn #(Integer. %) :default 100])]
-
+             ["-m" "--models"     "Number of models to generate"     :parse-fn #(Integer. %) :default 10]
+             ["-c" "--contents"   "Number of contents to generate"   :parse-fn #(Integer. %) :default 100])]
+    
     ;; deal with 
     (when (options :help)
       (println banner)
       (System/exit 0))
+
+    (println "Generating" (options :attributes) "attributes", (options :models) "models and" (options :contents) "contents...")
     
     ;; generates the import files
-    (all-file (options :attributes) (options :models) (options :contents))))
+    (all-file (options :attributes) (options :models) (options :contents))
+    (println "done!")))    
 
 (println "--------- END OF IMPORT_GEN  ----------" (java.util.Date.))
