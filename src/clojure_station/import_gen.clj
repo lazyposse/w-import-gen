@@ -70,12 +70,12 @@
 
 (defn- content-head
   [] (str "\"ACTION\";\"TYPE D'OBJET\";\"ID CONTENU\";\"SOURCE\";\"CODE DU MODELE\";"
-          (reduce str (repeat 53 "\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\";"))))
+          (reduce str (repeat 53 "\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\""))))
 
 (defn- content-line
   [model-code attr-nb attr-codes]
-  (str "\"CREATE\";\"Content\";;\"SITELABO\";\"" model-code
-       (reduce str (mapcat #(str "\";\"" % "\";\"" % "-val" )
+  (str "\"CREATE\";\"Content\";;\"SITELABO\";\"" model-code "\""
+       (reduce str (mapcat #(str ";\"" % "\";\"" % "-val\"" )
                            (take attr-nb attr-codes)))))
 
 (fact "content-line"
@@ -83,7 +83,7 @@
                     2
                     ["attr1" "attr2"])
       =>
-      "\"CREATE\";\"Content\";;\"SITELABO\";\"ServiceRosier\";\"attr1\";\"attr1-val\";\"attr2\";\"attr2-val\";")
+      "\"CREATE\";\"Content\";;\"SITELABO\";\"ServiceRosier\";\"attr1\";\"attr1-val\";\"attr2\";\"attr2-val\"")
 
 (defn content-file
   [model->attrs content-nb]
@@ -96,12 +96,16 @@
                                        (content-line model-code (count attrs) attrs)))
                                    (keys model->attrs)))))))
 
+(defn new-data "Build a map of {:attributes <attributes> :models <models> :contents <contents>}"
+  [])
+
 (defn all-file
- [] (let [model->attrs {"m1" ["a1" "a2"]
-                        "m2" ["a2" "a3"]}
-          attrs (distinct (mapcat second model->attrs))]
-      (attr-file attrs)
-      (model-file model->attrs)
-      (content-file model->attrs 4)))
+  [model-nb attr-nb content-nb]
+  (let [model->attrs {"m1" ["a1" "a2"]
+                      "m2" ["a2" "a3"]}
+        attrs (distinct (mapcat second model->attrs))]
+    (attr-file attrs)
+    (model-file model->attrs)
+    (content-file model->attrs 4)))
 
 (println "--------- END OF IMPORT_GEN  ----------" (java.util.Date.))
