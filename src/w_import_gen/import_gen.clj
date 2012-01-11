@@ -3,11 +3,11 @@
   (:use     [midje.sweet]
             [clojure.pprint :only [pp pprint]]
             [clojure.tools.cli])
-  (:require [clojure.walk :as w])
-  (:require [clojure.set  :as set])
-  (:require [clojure.zip  :as z])
-  (:require [clojure.java.shell :as shell])
-  (:require [clojure.string :as s :only [join]])
+  (:require [clojure.walk :as w]
+            [clojure.set  :as set]
+            [clojure.zip  :as z]
+            [clojure.java.shell :as shell]
+            [clojure.string :as s :only [join]])
   (:gen-class))
 
 (println "--------- BEGIN OF IMPORT_GEN  ----------" (java.util.Date.))
