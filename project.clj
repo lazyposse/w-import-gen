@@ -1,5 +1,6 @@
 (defproject w-import-gen "1.0.0-SNAPSHOT"
   :description "FIXME: write description"
+  :main clojure-station.wikeo.import-gen
   :dependencies [[org.clojure/clojure         "1.2.1"]
                  [org.clojure/clojure-contrib "1.2.0"]
                  [clj-http                    "0.1.3"]

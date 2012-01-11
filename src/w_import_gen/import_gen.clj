@@ -7,7 +7,8 @@
   (:require [clojure.zip  :as z])
   (:require [clojure.java.shell :as shell])
   (:require [clojure.string :as s :only [join]])
-  (:import (java.util Date)))
+  (:import (java.util Date))
+  (:gen-class))
 
 (println "--------- BEGIN OF IMPORT_GEN  ----------" (java.util.Date.))
 
@@ -95,12 +96,27 @@
                                        (content-line model-code (count attrs) attrs)))
                                    (keys model->attrs)))))))
 
+(defn new-model->attrs
+  [attr-nb model-nb]
+  (zipmap (map #(str "m" (inc %)) (range model-nb))
+          (map (fn [_] (map #(str "a" (inc %)) (range attr-nb)))
+               (range model-nb))))
+
+
+(fact "new-model->attrs"
+      (new-model->attrs 3 2) => {"m1" ["a1" "a2" "a3"]
+                                 "m2" ["a1" "a2" "a3"]})
+
 (defn all-file
- [] (let [model->attrs {"m1" ["a1" "a2"]
-                        "m2" ["a2" "a3"]}
-          attrs (distinct (mapcat second model->attrs))]
-      (attr-file attrs)
-      (model-file model->attrs)
-      (content-file model->attrs 4)))
+  [attr-nb model-nb content-nb]
+  (let [model->attrs (new-model->attrs attr-nb model-nb)
+        attrs        (distinct (mapcat second model->attrs))]
+    (attr-file attrs)
+    (model-file model->attrs)
+    (content-file model->attrs content-nb)))
+
+
+(defn -main [& args]
+  (all-file 1000 8000 130000))
 
 (println "--------- END OF IMPORT_GEN  ----------" (java.util.Date.))
