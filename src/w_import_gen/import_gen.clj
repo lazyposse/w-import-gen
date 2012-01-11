@@ -113,9 +113,14 @@
     (model-file   models attributes)
     (content-file models attributes (:content-nb args))))
 
-(comment (defn -main [& args]
-           (all-file {:model-nb           2
-                      :attrs-per-model-nb 3
-                      :content-nb         10})))
+(comment "A small data set"
+  (all-file {:model-nb           2
+             :attrs-per-model-nb 3
+             :content-nb         10}))
+
+(comment "A 'SID-like' data set"
+  (all-file {:model-nb           2000
+             :attrs-per-model-nb 450
+             :content-nb         130000}))
 
 (println "--------- END OF IMPORT_GEN  ----------" (java.util.Date.))
