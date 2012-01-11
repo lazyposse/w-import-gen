@@ -6,6 +6,7 @@
   (:require [clojure.set  :as set])
   (:require [clojure.zip  :as z])
   (:require [clojure.java.shell :as shell])
+  (:require [clojure.java.io :as io])
   (:import (java.util Date))
   (:gen-class))
 
@@ -19,6 +20,17 @@
 
 (defn spit-as-lines "Given a seq and a filename, write it to the specified file as lines."
   [f s] (spit f (as-lines s)))
+
+(defn lazy-write-lines "Take a seq and a filename and lazily write the seq to the file, each element being on a separate line"
+  [fn s] (with-open [w (io/writer fn)]
+           (binding [*out* w]
+             (doseq [l s]
+               (println l)))))
+
+(fact "lazy-write-lines"
+      (let [filename "/tmp/spit-as-lines.txt"]
+        (lazy-write-lines filename [1 2])   => nil
+        (:out (shell/sh "cat" filename)) => "1\n2\n"))
 
 (fact "spit-as-lines"
       (let [filename "/tmp/spit-as-lines.txt"]
@@ -116,8 +128,7 @@
     (model-file model->attrs)
     (content-file model->attrs content-nb)))
 
-
 (defn -main [& args]
-  (all-file 1000 8000 130000))
+  (all-file 450 1000 130000))
 
 (println "--------- END OF IMPORT_GEN  ----------" (java.util.Date.))
