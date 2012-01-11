@@ -15,10 +15,10 @@
 (fact (as-lines [1 2]) => "1\n2\n")
 
 (defn lazy-write-lines "Take a seq and a filename and lazily write the seq to the file, each element being on a separate line"
-  [fn s] (with-open [w (io/writer fn)]
-           (binding [*out* w]
-             (doseq [l s]
-               (println l)))))
+  [f s] (with-open [w (io/writer f)]
+          (binding [*out* w]
+            (doseq [l s]
+              (println l)))))
 
 (fact "lazy-write-lines"
       (let [filename "/tmp/lazy-write-lines.txt"]
@@ -59,15 +59,14 @@
       "\"CREATE\";\"Model\";\"ProduitRosier\";\"SID\";\"Product\";\"name-ProduitRosier\";\"display-name-ProduitRosier\";\"reference|true|false|\";\"designation|true|false|\";")
 
 (defn model-file
-  [model->attrs] (lazy-write-lines
+  [models attrs] (lazy-write-lines
                   "/tmp/model.csv"
                   (cons (model-head)
                         (map (fn [model-code]
-                               (let [attrs (model->attrs model-code)]
-                                 (model-line model-code
-                                             (count attrs)
-                                             attrs )))
-                             (keys model->attrs)))))
+                               (model-line model-code
+                                           (count attrs)
+                                           attrs ))
+                             models))))
 
 (defn- content-head
   [] (str "\"ACTION\";\"TYPE D'OBJET\";\"ID CONTENU\";\"SOURCE\";\"CODE DU MODELE\";"
@@ -87,36 +86,36 @@
       "\"CREATE\";\"Content\";;\"SITELABO\";\"ServiceRosier\";\"attr1\";\"attr1-val\";\"attr2\";\"attr2-val\"")
 
 (defn content-file
-  [model->attrs content-nb]
+  [models attrs content-nb]
   (lazy-write-lines "/tmp/content.csv"
                     (cons (content-head)
                           (take content-nb
                                 (cycle
                                  (map (fn [model-code]
-                                        (let [attrs (model->attrs model-code)]
-                                          (content-line model-code (count attrs) attrs)))
-                                      (keys model->attrs)))))))
+                                        (content-line model-code (count attrs) attrs))
+                                      models))))))
 
-(defn new-model->attrs
-  [attr-nb model-nb]
-  (zipmap (map #(str "m" (inc %)) (range model-nb))
-          (map (fn [_] (map #(str "a" (inc %)) (range attr-nb)))
-               (range model-nb))))
+(defn make-meta "Create a map of wikeo meta data"
+  [{:keys [model-nb attrs-per-model-nb]}]
+  {:attributes (map #(str "a" (inc %)) (range attrs-per-model-nb))
+   :models     (map #(str "m" (inc %)) (range model-nb))})
 
-
-(fact "new-model->attrs"
-      (new-model->attrs 3 2) => {"m1" ["a1" "a2" "a3"]
-                                 "m2" ["a1" "a2" "a3"]})
+(fact "make-meta"
+  (make-meta {:model-nb           2
+              :attrs-per-model-nb 3}) => {:attributes ["a1" "a2" "a3"]
+                                          :models     ["m1" "m2"]})
 
 (defn all-file
-  [attr-nb model-nb content-nb]
-  (let [model->attrs (new-model->attrs attr-nb model-nb)
-        attrs        (distinct (mapcat second model->attrs))]
-    (attr-file attrs)
-    (model-file model->attrs)
-    (content-file model->attrs content-nb)))
+  [args]
+  (let [{:keys [attributes models]}
+        (make-meta args)]
+    (attr-file    attributes)
+    (model-file   models attributes)
+    (content-file models attributes (:content-nb args))))
 
-(defn -main [& args]
-  (all-file 450 1000 130000))
+(comment (defn -main [& args]
+           (all-file {:model-nb           2
+                      :attrs-per-model-nb 3
+                      :content-nb         10})))
 
 (println "--------- END OF IMPORT_GEN  ----------" (java.util.Date.))
