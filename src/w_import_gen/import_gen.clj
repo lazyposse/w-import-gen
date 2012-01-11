@@ -1,8 +1,8 @@
 (ns ^{:doc "genereate import files"}
   clojure-station.wikeo.import-gen
-  (:use     [midje.sweet])
-  (:use     [clojure.pprint :only [pp pprint]])
-  (:use     [clojure.tools.cli])
+  (:use     [midje.sweet]
+            [clojure.pprint :only [pp pprint]]
+            [clojure.tools.cli])
   (:require [clojure.walk :as w])
   (:require [clojure.set  :as set])
   (:require [clojure.zip  :as z])
