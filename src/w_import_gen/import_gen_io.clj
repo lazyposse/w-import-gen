@@ -20,7 +20,7 @@
         (lazy-write-lines filename [1 2])   => nil
         (:out (shell/sh "cat" filename)) => "1\n2\n"))
 
-(defn attr-file "Output a file of attribute import file"
+(defn attr-file "Output a file of attributes import file"
   [attr-codes] (lazy-write-lines "/tmp/attr.csv"
                       (cons (attr-head)
                             (map attr-line attr-codes))))
@@ -35,7 +35,7 @@
                                            attrs ))
                              models))))
 
-(defn content-file "Given a seq of model codes, a seq of attributes code an a number of content to produce, write a content import file"
+(defn content-file "Given a seq of model codes, a seq of attribute codes and a number of contents to produce, write a contents import file"
   [models attrs content-nb]
   (lazy-write-lines "/tmp/content.csv"
                     (cons (content-head)
@@ -45,7 +45,13 @@
                                         (content-line model-code (count attrs) attrs))
                                       models))))))
 
-(defn all-file "Given a seq of attribute codes and a seq of model code, 3 files import files: one for attribute, one for models and one for content, each models has all the attributes and each content has all the attributes."
+(defn all-file
+  "Given a seq of attribute codes and a seq of model codes, 3 import files are generated:
+   - one for attributes
+   - one for models
+   - one for contents
+   Each model have all the attributes as MALs.
+   Each content has all the attributes of the model and attribute values generated."
   [args]
   (let [{:keys [attributes models]}
         (make-meta args)]
