@@ -10,20 +10,22 @@
 (println "--------- BEGIN OF IO  ----------" (java.util.Date.))
 
 (defn lazy-write-lines "Take a seq and a filename and lazily write the seq to the file, each element being on a separate line"
-  [f s] (with-open [w (io/writer f)]
-          (binding [*out* w]
-            (doseq [l s]
-              (println l)))))
+  [f s]
+  (with-open [w (io/writer f)]
+    (binding [*out* w]
+      (doseq [l s]
+        (println l)))))
 
 (fact "lazy-write-lines"
-      (let [filename "/tmp/lazy-write-lines.txt"]
-        (lazy-write-lines filename [1 2])   => nil
-        (:out (shell/sh "cat" filename)) => "1\n2\n"))
+  (let [filename "/tmp/lazy-write-lines.txt"]
+    (lazy-write-lines filename [1 2])   => nil
+    (:out (shell/sh "cat" filename)) => "1\n2\n"))
 
 (defn attr-file "Output a file of attributes import file"
-  [attr-codes] (lazy-write-lines "/tmp/attr.csv"
-                      (cons (attr-head)
-                            (map attr-line attr-codes))))
+  [attr-codes]
+  (lazy-write-lines "/tmp/attr.csv"
+                    (cons (attr-head)
+                          (map attr-line attr-codes))))
 
 (fact "attr-file"
   (attr-file ["a0" "a1"]) => nil
