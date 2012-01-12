@@ -1,10 +1,10 @@
 (ns ^{:doc "Generate import files - io namespace"}
   w_import_gen.import_gen_io
-  (:use [w_import_gen.import_gen])
-  (:use [midje.sweet])
-  (:require [clojure.java.shell :as shell])
-  (:require [clojure.java.io :as io])
-  (:use [clojure.tools.cli])
+  (:use [w_import_gen.import_gen]
+        [midje.sweet]
+        [clojure.tools.cli])
+  (:require [clojure.java.shell :as shell]
+            [clojure.java.io :as io])
   (:gen-class))
 
 (println "--------- BEGIN OF IO  ----------" (java.util.Date.))
