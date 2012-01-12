@@ -1,6 +1,7 @@
 (ns ^{:doc "genereate import files"}
-  clojure-station.wikeo.import-gen
+  w-import-gen.core
   (:use     [midje.sweet])
+  (:require [midje.semi-sweet :as ss])
   (:use     [clojure.tools.cli])
   (:use     [clojure.pprint :only [pp pprint]])
   (:require [clojure.walk :as w])
@@ -13,6 +14,7 @@
 
 (println "--------- BEGIN OF IMPORT_GEN  ----------" (java.util.Date.))
 
+(comment (alter-var-root #'*include-midje-checks* (constantly true)))
 
 (defn lazy-write-lines "Take a seq and a filename and lazily write the seq to the file, each element being on a separate line"
   [f s] (with-open [w (io/writer f)]
@@ -140,5 +142,10 @@
   (all-file {:model-nb           2000
              :attrs-per-model-nb 450
              :content-nb         130000}))
+
+(comment "A middle data set"
+  (all-file {:model-nb           10
+             :attrs-per-model-nb 10
+             :content-nb         1000}))
 
 (println "--------- END OF IMPORT_GEN  ----------" (java.util.Date.))
