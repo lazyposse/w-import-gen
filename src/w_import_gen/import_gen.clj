@@ -52,7 +52,7 @@
    :models     (map #(str "m" (inc %)) (range nb-models))})
 
 (fact "make-meta"
-  (make-meta {:nb-models      2
+  (make-meta {:nb-models     2
               :nb-attributes 3}) => {:attributes ["a1" "a2" "a3"]
                                      :models     ["m1" "m2"]})
 
