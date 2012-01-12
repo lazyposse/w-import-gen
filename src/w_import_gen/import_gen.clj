@@ -1,5 +1,5 @@
 (ns ^{:doc "generate list of line for the csv files - namespace"}
-  clojure-station.wikeo.import-gen
+  w_import_gen.import_gen
   (:use [midje.sweet]))
 
 (println "--------- BEGIN OF IMPORT_GEN  ----------" (java.util.Date.))
