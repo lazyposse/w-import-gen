@@ -43,10 +43,7 @@
                            (take attr-nb attr-codes)))))
 
 (fact "content-line"
-      (content-line "ServiceRosier"
-                    2
-                    ["attr1" "attr2"])
-      =>
+      (content-line "ServiceRosier" 2 ["attr1" "attr2"]) =>
       "\"CREATE\";\"Content\";;\"SITELABO\";\"ServiceRosier\";\"attr1\";\"attr1-val\";\"attr2\";\"attr2-val\"")
 
 (defn make-meta "Given a number of models and a number of attributes per model, return a seq of model codes and a seq of attribute codes"
@@ -55,7 +52,7 @@
    :models     (map #(str "m" (inc %)) (range nb-models))})
 
 (fact "make-meta"
-  (make-meta {:nb-model           2
+  (make-meta {:nb-models      2
               :nb-attributes 3}) => {:attributes ["a1" "a2" "a3"]
                                      :models     ["m1" "m2"]})
 
