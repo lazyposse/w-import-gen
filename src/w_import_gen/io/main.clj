@@ -1,7 +1,7 @@
 (ns ^{:doc "The sole purpose of this ns is to expose the application
   via a main fn. We need this because this is where Midje compilation
   will be disabled and we don't want that anywhere else."}
-  w-import-gen.main
+  w-import-gen.io.main
   (:use     [midje.sweet])
   (:require [midje.semi-sweet :as ss])
   (:use     [clojure.tools.cli])
