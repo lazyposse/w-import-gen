@@ -91,19 +91,15 @@
     (all-file options)
     (println "done!")))
 
-(future-fact "IT test - A small data set"
-             (let [n (all-file {:nb-attributes       3
-                                :nb-models           2
-                                :attrs-per-model-nb  1
-                                :nb-contents         10})]
-               (:out (shell/sh "cat" "/tmp/attr.csv")) => nil
-               (:out (shell/sh "cat" "/tmp/model.csv")) => nil
-               (:out (shell/sh "cat" "/tmp/content.csv")) => nil))
 
-(comment "A 'SID-like' data set"
-         (all-file {:nb-attributes       7500
-                    :nb-models           2000
-                    :attrs-per-model-nb  450
-                    :nb-contents         130000}))
+
+(fact "IT test - A small data set"
+  (let [n (all-file {:nb-attributes      1
+                    :nb-models           1
+                    :nb-attrs-per-model  1
+                    :nb-contents         1})]
+    (:out (shell/sh "cat" "/tmp/attr.csv")) => "\"ACTION\";\"TYPE D'OBJET\";\"CODE CARACTERISTIQUE\";\"SOURCE\";\"NOM\";\"NOM D'AFFICHAGE\";\"UNITE DE MESURE\";\"TYPE D'ATTRIBUT\"\n\"CREATE\";\"Attribute\";\"a1\";\"SID\";\"name-a1\";\"display-name-a1\";;\"string\"\n"
+    (:out (shell/sh "cat" "/tmp/model.csv")) => "\"ACTION\";\"TYPE D'OBJET\";\"CODE DU MODELE\";\"SOURCE\";\"TYPE DE MODELE\";\"NOM\";\"NOM D'AFFICHAGE\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\n\"CREATE\";\"Model\";\"m1\";\"SID\";\"Product\";\"name-m1\";\"display-name-m1\";\"a1|true|false|\";\n"
+    (:out (shell/sh "cat" "/tmp/content.csv")) => "\"ACTION\";\"TYPE D'OBJET\";\"ID CONTENU\";\"SOURCE\";\"CODE DU MODELE\";\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\n\"CREATE\";\"Content\";;\"SITELABO\";\"m1\";\"a1\";\"a1-val\"\n"))
 
 (println "--------- END OF IO  ----------" (java.util.Date.))
