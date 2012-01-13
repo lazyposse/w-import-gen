@@ -1,0 +1,17 @@
+A file generator for a certain professional context, not useful for
+anyone outside this context ;)
+
+
+
+* Usage
+
+#+BEGIN_SRC clojure
+cd w-import-gen
+lein run
+#+END_SRC
+
+* License
+
+Copyright (C) 2011 The w-import-gen team.
+
+Distributed under the Eclipse Public License, the same as Clojure.
