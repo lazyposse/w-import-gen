@@ -20,7 +20,6 @@
   (cons (attr-head)
         (map attr-line attr-codes)))
 
-;.;. Achievement is its own reward. -- David Lynch
 (fact "attr"
   (attr ["a0" "a1"]) => ["\"ACTION\";\"TYPE D'OBJET\";\"CODE CARACTERISTIQUE\";\"SOURCE\";\"NOM\";\"NOM D'AFFICHAGE\";\"UNITE DE MESURE\";\"TYPE D'ATTRIBUT\""
                          "\"CREATE\";\"Attribute\";\"a0\";\"SID\";\"name-a0\";\"display-name-a0\";;\"string\"" "\"CREATE\";\"Attribute\";\"a1\";\"SID\";\"name-a1\";\"display-name-a1\";;\"string\""])
