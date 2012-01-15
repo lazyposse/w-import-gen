@@ -2,7 +2,7 @@
   w-import-gen.core
   (:use [midje.sweet]))
 
-(println "--------- BEGIN OF IMPORT_GEN  ----------" (java.util.Date.))
+(println "--------- BEGIN OF CORE  ----------" (java.util.Date.))
 
 (defn- attr-head
   "The header of an attributes import file"
@@ -101,4 +101,4 @@
               :nb-attributes 3}) => {:attributes ["a1" "a2" "a3"]
                                      :models     ["m1" "m2"]})
 
-(println "--------- END OF IMPORT_GEN  ----------" (java.util.Date.))
+(println "--------- END OF CORE  ----------" (java.util.Date.))
