@@ -1,6 +1,6 @@
 (ns ^{:doc "Generate import files - io namespace"}
   w-import-gen.io.util
-  (:use [w-import-gen.core]
+  (:use [w-import-gen.core :only [attributes models contents make-meta]]
         [midje.sweet]
         [clojure.tools.cli])
   (:require [clojure.java.shell :as shell]
@@ -22,43 +22,33 @@
 
 (defn attr-file "Output a file of attributes import file"
   [attr-codes]
-  (lazy-write-lines "/tmp/attr.csv"
-                    (cons (attr-head)
-                          (map attr-line attr-codes))))
+  (lazy-write-lines "/tmp/attr.csv" (attributes attr-codes)))
 
 (fact "attr-file"
   (attr-file ["a0" "a1"]) => nil
-  (:out (shell/sh "cat" "/tmp/attr.csv")) => "\"ACTION\";\"TYPE D'OBJET\";\"CODE CARACTERISTIQUE\";\"SOURCE\";\"NOM\";\"NOM D'AFFICHAGE\";\"UNITE DE MESURE\";\"TYPE D'ATTRIBUT\"\n\"CREATE\";\"Attribute\";\"a0\";\"SID\";\"name-a0\";\"display-name-a0\";;\"string\"\n\"CREATE\";\"Attribute\";\"a1\";\"SID\";\"name-a1\";\"display-name-a1\";;\"string\"\n")
+  (provided
+    (attributes ["a0" "a1"]) => ["header", "attr;a0", "attr;a1"])
+  (:out (shell/sh "cat" "/tmp/attr.csv")) => "header\nattr;a0\nattr;a1\n")
 
 (defn model-file "Given a seq of model codes and a seq of model attributes, Write a model import file"
-  [models attrs nb-attrs-per-model]
-  (lazy-write-lines "/tmp/model.csv"
-                    (cons (model-head)
-                          (map (fn [model-code]
-                                 (model-line model-code
-                                             nb-attrs-per-model
-                                             attrs ))
-                               models))))
+  [model-codes attr-codes nb-attrs-per-model]
+  (lazy-write-lines "/tmp/model.csv" (models model-codes attr-codes nb-attrs-per-model)))
 
 (fact "model-file"
   (model-file ["m0" "m1"]  ["a0" "a1" "a2"] 2) => nil
-  (:out (shell/sh "cat" "/tmp/model.csv")) => "\"ACTION\";\"TYPE D'OBJET\";\"CODE DU MODELE\";\"SOURCE\";\"TYPE DE MODELE\";\"NOM\";\"NOM D'AFFICHAGE\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\n\"CREATE\";\"Model\";\"m0\";\"SID\";\"Product\";\"name-m0\";\"display-name-m0\";\"a0|true|false|\";\"a1|true|false|\";\n\"CREATE\";\"Model\";\"m1\";\"SID\";\"Product\";\"name-m1\";\"display-name-m1\";\"a0|true|false|\";\"a1|true|false|\";\n")
+  (provided
+    (models ["m0" "m1"]  ["a0" "a1" "a2"] 2) => ["header", "m0;a0;a1", "m1;a0;a1"])
+  (:out (shell/sh "cat" "/tmp/model.csv")) => "header\nm0;a0;a1\nm1;a0;a1\n")
 
 (defn content-file "Given a seq of model codes, a seq of attribute codes and a number of contents to produce, write a contents import file"
-  [models attrs nb-attrs-per-model content-nb ]
-  (lazy-write-lines "/tmp/content.csv"
-                    (cons (content-head)
-                          (take content-nb
-                                (cycle
-                                 (map (fn [model-code]
-                                        (content-line model-code nb-attrs-per-model attrs))
-                                      models))))))
+  [model-codes attr-codes nb-attrs-per-model content-nb]
+  (lazy-write-lines "/tmp/content.csv" (contents model-codes attr-codes nb-attrs-per-model content-nb )))
 
-;.;. The next function taunts you still. Will you rise to the challenge? --
-;.;. anonymous
 (fact "content-file"
   (content-file ["m0" "m1"]  ["a0" "a1" "a2"] 1 2) => nil
-  (:out (shell/sh "cat" "/tmp/content.csv")) => "\"ACTION\";\"TYPE D'OBJET\";\"ID CONTENU\";\"SOURCE\";\"CODE DU MODELE\";\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\n\"CREATE\";\"Content\";;\"SITELABO\";\"m0\";\"a0\";\"a0-val\"\n\"CREATE\";\"Content\";;\"SITELABO\";\"m1\";\"a0\";\"a0-val\"\n")
+    (provided
+    (contents ["m0" "m1"]  ["a0" "a1" "a2"] 1 2) => ["header", "c0;m0;a0;a1", "c1;m1;a0;a1"])
+  (:out (shell/sh "cat" "/tmp/content.csv")) => "header\nc0;m0;a0;a1\nc1;m1;a0;a1\n")
 
 (defn all-file
   "Given a seq of attribute codes and a seq of model codes, 3 import files are generated:
@@ -68,16 +58,16 @@
    Each model have all the attributes as MALs.
    Each content has all the attributes of the model and attribute values generated."
   [args]
-  (let [{:keys [attributes models]} (make-meta args)]
-    (attr-file    attributes)
-    (model-file   models attributes (:nb-attrs-per-model args))
-    (content-file models attributes (:nb-attrs-per-model args) (:nb-contents args))))
+  (let [{:keys [attr-codes model-codes]} (make-meta args)]
+    (attr-file    attr-codes)
+    (model-file   model-codes attr-codes (:nb-attrs-per-model args))
+    (content-file model-codes attr-codes (:nb-attrs-per-model args) (:nb-contents args))))
 
 (defn -main [& args]
   (let [[options args banner :as opts]
         (cli args
              ["-a" "--nb-attributes"      "Number of attributes to generate"           :parse-fn #(Integer. %) :default 10]
-             ["-a" "--nb-attrs-per-model" "Number of attributes per model to generate" :parse-fn #(Integer. %) :default 3]
+             ["-p" "--nb-attrs-per-model" "Number of attributes per model to generate" :parse-fn #(Integer. %) :default 3]
              ["-m" "--nb-models"          "Number of models to generate"               :parse-fn #(Integer. %) :default 100]
              ["-c" "--nb-contents"        "Number of contents to generate"             :parse-fn #(Integer. %) :default 200])]
 
@@ -90,8 +80,6 @@
     ;; generates the import files
     (all-file options)
     (println "done!")))
-
-
 
 (fact "IT test - A small data set"
   (let [n (all-file {:nb-attributes      1
