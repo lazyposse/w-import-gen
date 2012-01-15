@@ -93,12 +93,12 @@
 (defn make-meta
   "Given a number of models and a number of attributes per model, return a seq of model codes and a seq of attribute codes"
   [{:keys [nb-attributes nb-models]}]
-  {:attributes (map #(str "a" (inc %)) (range nb-attributes))
-   :models     (map #(str "m" (inc %)) (range nb-models))})
+  {:attr-codes  (map #(str "a" (inc %)) (range nb-attributes))
+   :model-codes (map #(str "m" (inc %)) (range nb-models))})
 
 (fact "make-meta"
   (make-meta {:nb-models     2
-              :nb-attributes 3}) => {:attributes ["a1" "a2" "a3"]
-                                     :models     ["m1" "m2"]})
+              :nb-attributes 3}) => {:attr-codes  ["a1" "a2" "a3"]
+                                     :model-codes ["m1" "m2"]})
 
 (println "--------- END OF CORE  ----------" (java.util.Date.))
