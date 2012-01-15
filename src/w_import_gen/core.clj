@@ -15,7 +15,7 @@
 (fact "attr-line"
       (attr-line "titre") => "\"CREATE\";\"Attribute\";\"titre\";\"SID\";\"name-titre\";\"display-name-titre\";;\"string\"")
 
-(defn attr "Output a file of attributes import file"
+(defn attr "Generates a seq of lines for the attributes import file."
   [attr-codes]
   (cons (attr-head)
         (map attr-line attr-codes)))
