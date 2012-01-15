@@ -81,8 +81,6 @@
     (all-file options)
     (println "done!")))
 
-
-
 (fact "IT test - A small data set"
   (let [n (all-file {:nb-attributes      1
                     :nb-models           1
