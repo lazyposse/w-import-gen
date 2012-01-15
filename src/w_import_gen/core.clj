@@ -41,6 +41,19 @@
       (model-line "ProduitRosier" 2 ["reference" "designation" "foo"]) =>
       "\"CREATE\";\"Model\";\"ProduitRosier\";\"SID\";\"Product\";\"name-ProduitRosier\";\"display-name-ProduitRosier\";\"reference|true|false|\";\"designation|true|false|\";")
 
+(defn models "Given a seq of model codes and a seq of model attributes, create a seq of model import lines"
+  [models attrs nb-attrs-per-model]
+  (cons (model-head)
+        (map (fn [model-code]
+               (model-line model-code
+                           nb-attrs-per-model
+                           attrs ))
+             models)))
+
+(fact "models"
+  (models ["m0" "m1"]  ["a0" "a1" "a2"] 2) => ["\"ACTION\";\"TYPE D'OBJET\";\"CODE DU MODELE\";\"SOURCE\";\"TYPE DE MODELE\";\"NOM\";\"NOM D'AFFICHAGE\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";"
+                                               "\"CREATE\";\"Model\";\"m0\";\"SID\";\"Product\";\"name-m0\";\"display-name-m0\";\"a0|true|false|\";\"a1|true|false|\";" "\"CREATE\";\"Model\";\"m1\";\"SID\";\"Product\";\"name-m1\";\"display-name-m1\";\"a0|true|false|\";\"a1|true|false|\";"])
+
 (defn content-head "Return the header of a contents import file"
   [] (str "\"ACTION\";\"TYPE D'OBJET\";\"ID CONTENU\";\"SOURCE\";\"CODE DU MODELE\";"
           (reduce str (repeat 53 "\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\""))))
