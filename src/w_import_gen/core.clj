@@ -91,7 +91,7 @@
                                                    "\"CREATE\";\"Content\";;\"SITELABO\";\"m0\";\"a0\";\"a0-val\"" "\"CREATE\";\"Content\";;\"SITELABO\";\"m1\";\"a0\";\"a0-val\""])
 
 (defn make-meta
-  "Given a number of models and a number of attributes per model, return a seq of model codes and a seq of attribute codes"
+  "Given a number of models and a number of attributes per model, return a seq of model codes and a seq of attribute codes into a map."
   [{:keys [nb-attributes nb-models]}]
   {:attr-codes  (map #(str "a" (inc %)) (range nb-attributes))
    :model-codes (map #(str "m" (inc %)) (range nb-models))})
