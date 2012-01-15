@@ -54,11 +54,11 @@
   (models ["m0" "m1"]  ["a0" "a1" "a2"] 2) => ["\"ACTION\";\"TYPE D'OBJET\";\"CODE DU MODELE\";\"SOURCE\";\"TYPE DE MODELE\";\"NOM\";\"NOM D'AFFICHAGE\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";\"MAL\";"
                                                "\"CREATE\";\"Model\";\"m0\";\"SID\";\"Product\";\"name-m0\";\"display-name-m0\";\"a0|true|false|\";\"a1|true|false|\";" "\"CREATE\";\"Model\";\"m1\";\"SID\";\"Product\";\"name-m1\";\"display-name-m1\";\"a0|true|false|\";\"a1|true|false|\";"])
 
-(defn content-head "Return the header of a contents import file"
+(defn- content-head "Return the header of a contents import file"
   [] (str "\"ACTION\";\"TYPE D'OBJET\";\"ID CONTENU\";\"SOURCE\";\"CODE DU MODELE\";"
           (reduce str (repeat 53 "\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\""))))
 
-(defn content-line "Given a model code, a number of attributes and a seq of all attributes codes, return a line of contents import file"
+(defn- content-line "Given a model code, a number of attributes and a seq of all attributes codes, return a line of contents import file"
   [model-code attr-nb attr-codes]
   (str "\"CREATE\";\"Content\";;\"SITELABO\";\"" model-code "\""
        (reduce str (mapcat #(str ";\"" % "\";\"" % "-val\"" )
