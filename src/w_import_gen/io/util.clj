@@ -58,10 +58,10 @@
    Each model have all the attributes as MALs.
    Each content has all the attributes of the model and attribute values generated."
   [args]
-  (let [{:keys [attributes models]} (make-meta args)]
-    (attr-file    attributes)
-    (model-file   models attributes (:nb-attrs-per-model args))
-    (content-file models attributes (:nb-attrs-per-model args) (:nb-contents args))))
+  (let [{:keys [attr-codes model-codes]} (make-meta args)]
+    (attr-file    attr-codes)
+    (model-file   model-codes attr-codes (:nb-attrs-per-model args))
+    (content-file model-codes attr-codes (:nb-attrs-per-model args) (:nb-contents args))))
 
 (defn -main [& args]
   (let [[options args banner :as opts]
