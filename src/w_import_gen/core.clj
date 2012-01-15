@@ -4,11 +4,11 @@
 
 (println "--------- BEGIN OF IMPORT_GEN  ----------" (java.util.Date.))
 
-(defn -attr-head "The header of an attributes import file"
+(defn- attr-head "The header of an attributes import file"
   []
   "\"ACTION\";\"TYPE D'OBJET\";\"CODE CARACTERISTIQUE\";\"SOURCE\";\"NOM\";\"NOM D'AFFICHAGE\";\"UNITE DE MESURE\";\"TYPE D'ATTRIBUT\"")
 
-(defn -attr-line "Returns a line for an attributes import file"
+(defn- attr-line "Returns a line for an attributes import file"
   [code]
   (str "\"CREATE\";\"Attribute\";\"" code "\";\"SID\";\"name-" code "\";\"display-name-" code "\";;\"string\""))
 
