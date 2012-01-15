@@ -77,7 +77,7 @@
   (let [[options args banner :as opts]
         (cli args
              ["-a" "--nb-attributes"      "Number of attributes to generate"           :parse-fn #(Integer. %) :default 10]
-             ["-a" "--nb-attrs-per-model" "Number of attributes per model to generate" :parse-fn #(Integer. %) :default 3]
+             ["-p" "--nb-attrs-per-model" "Number of attributes per model to generate" :parse-fn #(Integer. %) :default 3]
              ["-m" "--nb-models"          "Number of models to generate"               :parse-fn #(Integer. %) :default 100]
              ["-c" "--nb-contents"        "Number of contents to generate"             :parse-fn #(Integer. %) :default 200])]
 
