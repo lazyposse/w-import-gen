@@ -1,6 +1,6 @@
 (ns ^{:doc "Generate import files - io namespace"}
   w-import-gen.io.util
-  (:use [w-import-gen.core]
+  (:use [w-import-gen.core :only [attributes models contents make-meta]]
         [midje.sweet]
         [clojure.tools.cli])
   (:require [clojure.java.shell :as shell]
