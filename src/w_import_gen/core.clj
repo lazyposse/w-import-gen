@@ -68,6 +68,19 @@
       (content-line "ServiceRosier" 2 ["attr1" "attr2"]) =>
       "\"CREATE\";\"Content\";;\"SITELABO\";\"ServiceRosier\";\"attr1\";\"attr1-val\";\"attr2\";\"attr2-val\"")
 
+(defn contents "Given a seq of model codes, a seq of attribute codes and a number of contents to produce, generate a seq of contents line"
+  [models attrs nb-attrs-per-model content-nb]
+  (cons (content-head)
+        (take content-nb
+              (cycle
+               (map (fn [model-code]
+                      (content-line model-code nb-attrs-per-model attrs))
+                    models)))))
+
+(fact "contents"
+  (contents ["m0" "m1"]  ["a0" "a1" "a2"] 1 2) => ["\"ACTION\";\"TYPE D'OBJET\";\"ID CONTENU\";\"SOURCE\";\"CODE DU MODELE\";\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\"\"CODE DE L'ATTRIBUT\";\"VALEUR DE L'ATTRIBUT\""
+                                                   "\"CREATE\";\"Content\";;\"SITELABO\";\"m0\";\"a0\";\"a0-val\"" "\"CREATE\";\"Content\";;\"SITELABO\";\"m1\";\"a0\";\"a0-val\""])
+
 (defn make-meta "Given a number of models and a number of attributes per model, return a seq of model codes and a seq of attribute codes"
   [{:keys [nb-attributes nb-models]}]
   {:attributes (map #(str "a" (inc %)) (range nb-attributes))
