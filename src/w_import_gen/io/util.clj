@@ -20,6 +20,24 @@
     (lazy-write-lines filename [1 2])   => nil
     (:out (shell/sh "cat" filename)) => "1\n2\n"))
 
+(comment (defn lazy-read-lines "lazy read the file"
+   ([f s] (with-open [r (io/reader f)]
+            (binding [*in* r]
+              (doseq [l s]
+                ( l)))))))
+
+(defn lazy-read-lines "lazy read the file"
+  ([f] (with-open [r (io/reader f)]
+         (binding [*in* r]
+           (lazy-read-lines r (read-line)))))
+  ([r l]  (cons l
+                (lazy-seq (lazy-read-lines r (read-line))))))
+
+(future-fact "lazy-write-lines"
+  (let [filename "/tmp/lazy-write-lines.txt"]
+    (lazy-write-lines filename [1 2])   => nil
+    (lazy-read-lines filename) => "1\n2\n"))
+
 (defn attr-file "Output a file of attributes import file"
   [attr-codes]
   (lazy-write-lines "/tmp/attr.csv" (attributes attr-codes)))
