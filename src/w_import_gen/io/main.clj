@@ -13,7 +13,7 @@
   (:require [clojure.java.shell :as shell])
   (:require [clojure.java.io :as io])
   (:import (java.util Date))
-  (:gen-class))
+  #_(:gen-class))
 
 ;; Disable Midje compilation from prod code
 (alter-var-root #'*include-midje-checks* (constantly true))

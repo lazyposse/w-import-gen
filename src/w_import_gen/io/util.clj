@@ -1,6 +1,7 @@
 (ns ^{:doc "Generate import files - io namespace"}
   w-import-gen.io.util
   (:use [w-import-gen.core :only [attributes models contents make-meta]]
+        [clojure.repl :only [doc]]
         [midje.sweet]
         [clojure.tools.cli])
   (:require [clojure.java.shell :as shell]
@@ -19,6 +20,26 @@
   (let [filename "/tmp/lazy-write-lines.txt"]
     (lazy-write-lines filename [1 2])   => nil
     (:out (shell/sh "cat" filename)) => "1\n2\n"))
+
+(defn read-lines
+"Like clojure.core/line-seq but opens f with reader. Automatically
+closes the reader AFTER YOU CONSUME THE ENTIRE SEQUENCE.
+Stolen from: https://github.com/stoyle/clojure.contrib.io/tree/master/src/main/clojure/clojure/contrib"
+[f]
+(let [read-line (fn this [^java.io.BufferedReader rdr]
+                  (lazy-seq
+                   (if-let [line (.readLine rdr)]
+                     (cons line (this rdr))
+                     (.close rdr))))]
+  (read-line (io/reader f))))
+
+;; TODO : get a tmp dir from java getProperties for better portability
+(fact "lazy-write-lines"
+      (let [filename "/tmp/lazy-write-lines.txt"]
+        ;; given
+        (lazy-write-lines filename ["first" "last"]) => nil
+        ;; when/then
+        (read-lines filename)             => ["first" "last"]))
 
 (defn attr-file "Output a file of attributes import file"
   [attr-codes]
