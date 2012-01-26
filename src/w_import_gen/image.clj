@@ -2,7 +2,8 @@
   w-import-gen.image
   (:use [midje.sweet]
         [clojure-csv.core :only [parse-csv]]
-        [clojure.repl :only [doc]])
+        [clojure.repl :only [doc]]
+        [clojure.tools.cli])
   (:require [w-import-gen.io.util :as u]))
 
 (unfinished )
