@@ -5,7 +5,14 @@
         [clojure.repl :only [doc]])
   (:require [w-import-gen.io.util :as u]))
 
-(unfinished get-img-ids)
+(unfinished )
+
+(defn get-img-ids "Given a line of contents, extract all ids for the pictures attribute."
+  [l]
+  (set (map second (filter (fn [[a p]] (= a "pictures")) (partition-all 2 (clojure.string/split l #";"))))))
+
+(fact "get-img-ids"
+  (get-img-ids "a;b;c;d;pictures;id1;pictures;id2;some;noise;pictures;id3") => #{"id1", "id2", "id3"})
 
 (defn get-img-id [l]
   (nth (.split l ";") 2))
