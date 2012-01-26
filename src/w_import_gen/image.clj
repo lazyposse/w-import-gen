@@ -13,15 +13,6 @@
 (fact "get-img-id"
       (get-img-id "a;b;c;d...") => "c")
 
-(defn read-img! [img-file]
-  (map get-img-id (u/read-lines img-file)))
-
-(fact "read-img!"
-      (read-img! :img-file) => [:id]
-      (provided
-       (u/read-lines :img-file) => [:line]
-       (get-img-id :line) => :id))
-
 (defn read-content!
   [content-file]
   (set (mapcat #(get-img-id %) (u/read-lines content-file))))
@@ -34,14 +25,13 @@
     (get-img-id :line2) => #{:img-id3}))
 
 (defn filter-img!
-  [img-file content-file out-file] (let [img (read-img! img-file)
-                                         content (read-content! content-file)]
-                                     (u/lazy-write-lines out-file (filter-img img content))))
+  [img-file content-file out-file]
+  (let [img-ids-from-content (read-content! content-file)]
+    (u/lazy-write-lines out-file (filter-img img-file img-ids-from-content))))
 
 (fact
  (filter-img! :img-file :content-file :out-file) => nil
  (provided
-  (read-img! :img-file)                => :img
-  (read-content! :content-file)        => :content
-  (filter-img :img :content)           => :filtered-lines
+  (read-content! :content-file)                  => :content
+  (filter-img :img-file :content)                => :filtered-lines
   (u/lazy-write-lines :out-file :filtered-lines) => nil))
