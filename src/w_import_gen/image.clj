@@ -14,13 +14,14 @@
 (fact "get-img-ids"
   (get-img-ids "a;b;c;d;pictures;id1;pictures;id2;some;noise;pictures;id3") => #{"id1", "id2", "id3"})
 
-(defn get-img-id [l]
+(defn get-img-id "Given a line of the picture file, retrieve the 3rd entry which is the image id."
+  [l] 
   (nth (.split l ";") 2))
 
 (fact "get-img-id"
       (get-img-id "a;b;c;d...") => "c")
 
-(defn read-content!
+(defn read-content! "Retrieve all the images ids from the content file."
   [content-file]
   (set (mapcat #(get-img-ids %) (u/read-lines content-file))))
 
@@ -31,7 +32,7 @@
     (get-img-ids :line1) => #{:img-id1 :img-id2}
     (get-img-ids :line2) => #{:img-id3}))
 
-(defn filter-img
+(defn filter-img "Filter the images in the img-file which are indeed used in the img-ids set."
   [img-file img-ids]
   (filter #(when (not (nil? (img-ids (get-img-id %)))) %) (u/read-lines img-file)))
 
@@ -44,7 +45,7 @@
     (get-img-id :line2) => :id2
     (get-img-id :line3) => :id3))
 
-(defn filter-img!
+(defn filter-img! "Filter the images which are used"
   [img-file content-file out-file]
   (let [img-ids-from-content (read-content! content-file)]
     (u/lazy-write-lines out-file (filter-img img-file img-ids-from-content))))
