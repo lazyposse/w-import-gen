@@ -5,7 +5,7 @@
         [clojure.repl :only [doc]])
   (:require [w-import-gen.io.util :as u]))
 
-(unfinished is-id-present?)
+(unfinished get-img-ids)
 
 (defn get-img-id [l]
   (nth (.split l ";") 2))
@@ -15,14 +15,14 @@
 
 (defn read-content!
   [content-file]
-  (set (mapcat #(get-img-id %) (u/read-lines content-file))))
+  (set (mapcat #(get-img-ids %) (u/read-lines content-file))))
 
 (fact "read-content!"
   (read-content! :content-file) => #{:img-id1 :img-id2 :img-id3}
   (provided
     (u/read-lines :content-file) => [:line1 :line2]
-    (get-img-id :line1) => #{:img-id1 :img-id2}
-    (get-img-id :line2) => #{:img-id3}))
+    (get-img-ids :line1) => #{:img-id1 :img-id2}
+    (get-img-ids :line2) => #{:img-id3}))
 
 (defn filter-img
   [img-file img-ids]
