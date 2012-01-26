@@ -56,3 +56,22 @@
   (read-content! :content-file)                  => :content
   (filter-img :img-file :content)                => :filtered-lines
   (u/lazy-write-lines :out-file :filtered-lines) => nil))
+
+(defn -main-images [& args]
+  (let [[opts args banner :as options]
+        (cli args 
+             ["-h" "--help"          "Show help" :default false :flag true]
+             ["-i" "--images-file"   "Images file"]
+             ["-c" "--contents-file" "Contents file"]
+             ["-o" "--output-file"   "Filtered images output file"])]
+    
+    (when (opts :help)
+      (do (println banner)
+          (System/exit 0)))
+
+    (filter-img! (opts :images-file) (opts :contents-file) (opts :output-file))))
+
+(fact
+  (-main-images "-i" "ima-file" "-c" "con-file" "-o" "out-file") => nil
+  (provided
+    (filter-img! "ima-file" "con-file" "out-file") => nil))
