@@ -7,8 +7,6 @@
         [clojure.repl :only [doc]]
         [clojure-csv.core :only [parse-csv]]))
 
-(println "--------- BEGIN OF ANALYSE  ----------" (java.util.Date.))
-
 (unfinished )
 
 (def nb-items-model-before-mals 7)
@@ -57,4 +55,3 @@
     (model-count-mal (options :model-filename))))
 
 
-(println "--------- END OF ANALYSE  ----------" (java.util.Date.))

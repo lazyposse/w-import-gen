@@ -2,8 +2,6 @@
   w-import-gen.core
   (:use [midje.sweet]))
 
-(println "--------- BEGIN OF CORE  ----------" (java.util.Date.))
-
 (defn- attr-head
   "The header of an attributes import file"
   []
@@ -100,5 +98,3 @@
   (make-meta {:nb-models     2
               :nb-attributes 3}) => {:attr-codes  ["a1" "a2" "a3"]
                                      :model-codes ["m1" "m2"]})
-
-(println "--------- END OF CORE  ----------" (java.util.Date.))
