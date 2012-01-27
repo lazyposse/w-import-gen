@@ -15,8 +15,8 @@
   (:import (java.util Date))
   #_(:gen-class))
 
-;; Disable Midje compilation from prod code
-(alter-var-root #'*include-midje-checks* (constantly true))
+;; Disable Midje compilation from prod code (for prod, set this to false)
+(alter-var-root #'midje.semi-sweet/*include-midje-checks* (constantly true))
 
 (defn -main "Entry point of the app"
-  [& args] (u/-main))    
+  [& args] (u/-main))
