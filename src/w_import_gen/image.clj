@@ -25,7 +25,7 @@
 
 (defn read-content! "Retrieve all the images ids from the content file."
   [content-file]
-  (set (mapcat #(get-img-ids %) (u/read-lines content-file))))
+  (set (mapcat get-img-ids (u/read-lines content-file))))
 
 (fact "read-content!"
   (read-content! :content-file) => #{:img-id1 :img-id2 :img-id3}
