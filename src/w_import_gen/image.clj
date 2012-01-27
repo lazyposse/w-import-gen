@@ -36,7 +36,7 @@
 
 (defn filter-img "Filter the images in the img-file which are indeed used in the img-ids set."
   [img-file img-ids]
-  (filter #(when (not (nil? (img-ids (get-img-id %)))) %) (u/read-lines img-file)))
+  (filter (comp img-ids get-img-id) (u/read-lines img-file)))
 
 (fact "filter-img"
   (filter-img :img-file #{:id1 :id4}) => [:line1 :line4]
