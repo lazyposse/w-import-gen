@@ -9,11 +9,12 @@
 (unfinished )
 
 (defn get-img-ids "Given a line of contents, extract all ids for the pictures attribute."
-  [l]
-  (set (map second (filter (fn [[a p]] (= a "pictures")) (partition-all 2 (clojure.string/split l #";"))))))
+  [l] (reduce (fn [r [k v]] (if (= k "pictures") (conj r v) r))
+              #{}
+              (partition 2 (drop 5 (.split l ";")))))
 
 (fact "get-img-ids"
-  (get-img-ids "a;b;c;d;pictures;id1;pictures;id2;some;noise;pictures;id3") => #{"id1", "id2", "id3"})
+  (get-img-ids "action;content-type;external-code;source;id;pictures;id2;some;noise;pictures;id3") => #{"id2", "id3"})
 
 (defn get-img-id "Given a line of the picture file, retrieve the 3rd entry which is the image id."
   [l] 
@@ -48,8 +49,7 @@
 
 (defn filter-img! "Filter the images which are used"
   [img-file content-file out-file]
-  (let [img-ids-from-content (read-content! content-file)]
-    (u/lazy-write-lines out-file (filter-img img-file img-ids-from-content))))
+  (u/lazy-write-lines out-file (filter-img img-file (read-content! content-file))))
 
 (fact
  (filter-img! :img-file :content-file :out-file) => nil
@@ -57,6 +57,11 @@
   (read-content! :content-file)                  => :content
   (filter-img :img-file :content)                => :filtered-lines
   (u/lazy-write-lines :out-file :filtered-lines) => nil))
+
+(fact "itest: filter-img!"
+  (let [out "/tmp/out.csv"]
+    (filter-img! "data/images/itest/image.csv" "data/images/itest/product.csv" out) => nil
+    (count (u/read-lines out)) => 2))
 
 (defn -main-images [& args]
   (let [[opts args banner :as options]
